@@ -1,6 +1,6 @@
 #include "GLManager.h"
-#include <GLFW/glfw3.h>
 #include "GLEW/glew.h"
+#include <GLFW/glfw3.h>
 
 void GLManager::initBuffers(unsigned int& VBO, unsigned int& VAO) {
 	glGenBuffers(1, &VBO);
@@ -10,7 +10,8 @@ void GLManager::initBuffers(unsigned int& VBO, unsigned int& VAO) {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 }
 
-void GLManager::updateVBO(const std::vector<float>& vertices) {
+void GLManager::updateVBO(unsigned int& VBO, const std::vector<float>& vertices) {
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_DYNAMIC_DRAW);
 }
 

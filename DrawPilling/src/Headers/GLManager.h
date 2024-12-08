@@ -1,14 +1,16 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include "GLEW/glew.h"
+#include <GLFW/glfw3.h>
 #include <vector>
 
 class GLManager {
 public:
-	void initBuffers(unsigned int& VBO, unsigned int& VAO);
+	static void initBuffers(unsigned int& VBO, unsigned int& VAO);
 
-	void updateVBO(const std::vector<float>& vertices);
+	static void updateVBO(unsigned int& VBO, const std::vector<float>& vertices);
 
-	void drawStuff(unsigned int& VAO, GLenum mode, const std::vector<float>& vertices);
+	static void drawStuff(unsigned int& VAO, GLenum mode, const std::vector<float>& vertices);
+
+	static void handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos, std::vector<std::vector<float>>& circles, GLuint VBO, GLuint VAO, float radius, int sides);
 };

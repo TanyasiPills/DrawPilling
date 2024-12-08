@@ -9,6 +9,7 @@
 #include <math.h>
 #include <vector>
 #include "Drawing.h"
+#include "GLManager.h"
 
 
 #include "ImGui/imgui.h"
@@ -31,15 +32,6 @@ struct ShaderSource {
     std::string Fragment;
 };
 
-struct BrushVertecie
-{
-    float vertCords[72];
-    int index = 0;
-};
-
-struct RenderVertecies {
-    std::vector<float> vertexCoords;
-};
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -141,6 +133,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 
 // Main code
 int main(int, char**)
@@ -180,14 +176,10 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
 
+    unsigned int VBO;
+    unsigned int VAO;
+    GLManager::initBuffers(VBO, VAO);
 
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    //glBufferData(GL_ARRAY_BUFFER, data->vertexCoords.size() * sizeof(float), data->vertexCoords.data(), GL_DYNAMIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
     ShaderSource source = ParseShader("shaders/Fractal.shader");
     unsigned int shader = CreateShader(source.Vertex, source.Fragment);
@@ -199,6 +191,8 @@ int main(int, char**)
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+    std::vector<std::vector<float>> circles;
 
 
     // Main loop
@@ -242,6 +236,11 @@ int main(int, char**)
             ImGui::End();
 
             //glUniform1i(maxIterationLoc, data.iterations);
+        }
+
+        for (const auto& circle : circles) {
+            GLManager::updateVBO(circle);
+            GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
         }
 
 
