@@ -27,6 +27,9 @@
 #endif
 
 
+int screenwidth;
+int screenheight;
+
 struct ShaderSource {
     std::string Vertex;
     std::string Fragment;
@@ -118,6 +121,11 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    //int xDif = width - screenwidth;
+    //int yDif = height - screenheight;
+    glViewport(0, 0, width, height);
+}
 
 // Main code
 int main(int, char**)
@@ -132,9 +140,11 @@ int main(int, char**)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "I hate Jazz", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(690, 690, "I hate Jazz", nullptr, nullptr);
     if (window == nullptr)
         return 1;
+    screenwidth = 690;
+    screenheight = 690;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -154,7 +164,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     bool show_demo_window = true;
-    ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+    ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 
 
     unsigned int VBO;
@@ -178,10 +188,11 @@ int main(int, char**)
 
     glUniform1f(aspectRatioLoc, aspect);
 
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
 
     std::vector<std::vector<float>> circles;
-
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -224,6 +235,9 @@ int main(int, char**)
             static float color[3] = { 0.0f, 0.0f, 1.0f };
             ImGui::ColorEdit3("##c", color);
             glUniform3f(colorLocation, color[0], color[1], color[2]);
+            glfwGetFramebufferSize(window, &width, &height);
+            float aspect = (float)width / (float)height;
+            glUniform1f(aspectRatioLoc, aspect);
 
             hover = ImGui::IsWindowHovered();
 
@@ -238,9 +252,6 @@ int main(int, char**)
 
         // Rendering
         ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 

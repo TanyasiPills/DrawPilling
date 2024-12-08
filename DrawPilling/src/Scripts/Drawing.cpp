@@ -42,13 +42,8 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
 
     if (hover || ImGui::IsAnyItemHovered())
     {
-        std::cout << "hhhaaaaaaa" << std::endl;
         return;
     }
-
-    std::cout << circles.size() << std::endl;
-
-    std::cout << "nyomjuk" << std::endl;
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         std::cout << "nagyon" << std::endl;
