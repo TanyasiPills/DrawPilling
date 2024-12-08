@@ -103,4 +103,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shaders\Style.penis" />
+  </ItemGroup>
 </Project>

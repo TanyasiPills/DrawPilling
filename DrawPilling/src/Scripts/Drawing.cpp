@@ -2,6 +2,7 @@
 #include "GLManager.h"
 #include <vector>
 #include <math.h>
+#include <iostream>
 #include "GLEW/glew.h"
 #include <GLFW/glfw3.h>
 #include "ImGui/imgui.h"
@@ -24,7 +25,7 @@ std::vector<float> Drawing::drawCircle(float x, float y, float r, int sides) {
     return vertices;
 }
 
-void handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos, std::vector<std::vector<float>>& circles, GLuint VBO, GLuint VAO, float radius, int sides) {
+void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos, std::vector<std::vector<float>>& circles, GLuint VBO, GLuint VAO, float radius, int sides, bool hover) {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     int width, height;
@@ -39,12 +40,18 @@ void handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos
     GLManager::updateVBO(VBO, currentCircle);
     GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, currentCircle);
 
-    if (ImGui::IsAnyItemHovered())
+    if (hover || ImGui::IsAnyItemHovered())
     {
+        std::cout << "hhhaaaaaaa" << std::endl;
         return;
     }
 
+    std::cout << circles.size() << std::endl;
+
+    std::cout << "nyomjuk" << std::endl;
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        std::cout << "nagyon" << std::endl;
         int num_samples = std::max(static_cast<int>(sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / radius), 1);
         for (int i = 0; i <= num_samples; ++i) {
             float t = static_cast<float>(i) / num_samples;

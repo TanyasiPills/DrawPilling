@@ -6,6 +6,9 @@ void GLManager::initBuffers(unsigned int& VBO, unsigned int& VAO) {
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 }

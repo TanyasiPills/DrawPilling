@@ -185,6 +185,9 @@
     <ClInclude Include="src\Headers\Drawing.h" />
     <ClInclude Include="src\Headers\GLManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shaders\Style.penis" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -118,25 +118,6 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        double xpos, ypos;
-        glfwGetCursorPos(window, &xpos, &ypos);
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        double normX = xpos / width;
-        double normY = ypos / height;
-        Drawing::drawCircle(normX, normY, 0.5f, 12);
-    }
-    else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        std::cout << "Right mouse button pressed!\n";
-    }
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
 
 // Main code
 int main(int, char**)
@@ -181,16 +162,23 @@ int main(int, char**)
     GLManager::initBuffers(VBO, VAO);
 
 
-    ShaderSource source = ParseShader("shaders/Fractal.shader");
+    ShaderSource source = ParseShader("Resources/shaders/Style.penis");
     unsigned int shader = CreateShader(source.Vertex, source.Fragment);
 
     //int maxIterationLoc = glGetUniformLocation(shader, "maxIterations");
+    GLint colorLocation = glGetUniformLocation(shader, "circleColor");
+    GLint aspectRatioLoc = glGetUniformLocation(shader, "aspectRatio");
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    float aspect = (float)width / (float)height;
+
 
     glUseProgram(shader);
 
-    //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
+    glUniform1f(aspectRatioLoc, aspect);
 
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
 
     std::vector<std::vector<float>> circles;
 
@@ -220,6 +208,9 @@ int main(int, char**)
 
         processInput(window);
 
+        static float size = 0.1f;
+        bool hover = false;
+
         {
             ImGui::Begin("Controls", 0);
 
@@ -227,21 +218,22 @@ int main(int, char**)
             ImGui::PushItemWidth(label_width);
             ImVec2 content_size = ImGui::GetWindowSize();
             ImGui::SetWindowSize(ImVec2(0, 0), ImGuiCond_Always);
+
+            ImGui::DragFloat("##x", &size, 0.01f, 0.0f, 0.0f, "%.04f");
             ImGui::SeparatorText("Color");
             static float color[3] = { 0.0f, 0.0f, 1.0f };
-            ImGui::ColorEdit3("##c", color, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoSmallPreview);
+            ImGui::ColorEdit3("##c", color);
+            glUniform3f(colorLocation, color[0], color[1], color[2]);
+
+            hover = ImGui::IsWindowHovered();
 
             ImGui::PopItemWidth();
 
             ImGui::End();
-
-            //glUniform1i(maxIterationLoc, data.iterations);
         }
 
-        for (const auto& circle : circles) {
-            GLManager::updateVBO(circle);
-            GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
-        }
+        
+
 
 
         // Rendering
@@ -251,6 +243,15 @@ int main(int, char**)
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
+
+
+        static double prevXpos, prevYpos;
+        Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, size, 24, hover);
+
+        for (const auto& circle : circles) {
+            GLManager::updateVBO(VAO, circle);
+            GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
+        }
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
