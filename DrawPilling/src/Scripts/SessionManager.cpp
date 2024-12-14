@@ -6,10 +6,9 @@
 #include <GLFW/glfw3.h> 
 #include "SessionManager.h"
 
-SessionData Manager::Assembly(GLFWerrorfun glfw_error_callback) {
+SessionData Manager::Assembly() {
     SessionData data;
 
-    glfwSetErrorCallback(glfw_error_callback);
     glfwInit(); //!!!!!!!!
 
     const char* glsl_version = "#version 130";
@@ -25,8 +24,6 @@ SessionData Manager::Assembly(GLFWerrorfun glfw_error_callback) {
     glfwSwapInterval(1); // Enable vsync
 
     glewInit(); //!!!!!!!!
-
-    glfwSetErrorCallback(glfw_error_callback);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

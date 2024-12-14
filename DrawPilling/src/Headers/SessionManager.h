@@ -9,6 +9,6 @@ struct SessionData
 
 class Manager {
 public:
-	static SessionData Assembly(GLFWerrorfun glfw_error_callback);
+	static SessionData Assembly();
 	static void DisAssembly(GLFWwindow* window, unsigned int shader);
 };

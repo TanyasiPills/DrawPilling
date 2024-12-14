@@ -31,6 +31,7 @@
 #include "Shader.h"
 #include "SessionManager.h"
 #include "Renderer.h"
+#include "CallBacks.h"
 
 
 //definitions
@@ -47,40 +48,15 @@ unsigned int VAO;
 static float size = 0.1f;
 bool hover = false;
 
-//functions
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
-
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    }
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    //int xDif = width - screenwidth;
-    //int yDif = height - screenheight;
-    glViewport(0, 0, width, height);
-    Renderer::RenderScreen(window,VBO,VAO,&size,&hover);
-}
-
 // Main code
 int main(int, char**)
 {
-    SessionData data = Manager::Assembly(glfw_error_callback);
+    SessionData data = Manager::Assembly();
 
     ShaderAndLocs shaderAndLocs = Shadering::CreateShader(VBO,VAO);
 
+    CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover);
 
-
-    glfwSetFramebufferSizeCallback(data.window, framebuffer_size_callback);
 
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
 
@@ -103,34 +79,12 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-
         //ImGui::ShowDemoWindow(&show_demo_window);
 
-        processInput(data.window);
+        CallBackManager::ProcessInput(data.window);
 
-        {
-            ImGui::Begin("Controls", 0);
+        Renderer::RenderUI(shaderAndLocs.colorLoc, &size, &hover);
 
-            float label_width = 200.0f + ImGui::GetStyle().ItemSpacing.x;
-            ImGui::PushItemWidth(label_width);
-            ImVec2 content_size = ImGui::GetWindowSize();
-            ImGui::SetWindowSize(ImVec2(0, 0), ImGuiCond_Always);
-
-            ImGui::DragFloat("##x", &size, 0.01f, 0.0f, 0.0f, "%.04f");
-            ImGui::SeparatorText("Color");
-            static float color[3] = { 0.0f, 0.0f, 1.0f };
-            ImGui::ColorEdit3("##c", color);
-            glUniform3f(shaderAndLocs.colorLoc, color[0], color[1], color[2]);
-
-            hover = ImGui::IsWindowHovered();
-
-            ImGui::PopItemWidth();
-
-            ImGui::End();
-        }
-
-        // Rendering
         Renderer::RenderScreen(data.window,VBO,VAO, &size, &hover);
     }
 #ifdef __EMSCRIPTEN__

@@ -158,6 +158,7 @@
     <ClCompile Include="Dependencies\Includes\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Dependencies\Includes\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\Includes\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Scripts\CallBacks.cpp" />
     <ClCompile Include="src\Scripts\Drawing.cpp" />
     <ClCompile Include="src\Scripts\GLManager.cpp" />
     <ClCompile Include="src\Scripts\main.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Dependencies\Includes\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Dependencies\Includes\ImGui\imstb_textedit.h" />
     <ClInclude Include="Dependencies\Includes\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\Headers\CallBacks.h" />
     <ClInclude Include="src\Headers\Drawing.h" />
     <ClInclude Include="src\Headers\GLManager.h" />
     <ClInclude Include="src\Headers\Renderer.h" />
