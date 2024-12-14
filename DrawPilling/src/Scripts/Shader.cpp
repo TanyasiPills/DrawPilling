@@ -4,6 +4,7 @@
 #include "GLEW/glew.h"
 #include <GLFW/glfw3.h> 
 #include "Shader.h"
+#include <GLManager.h>
 
 ShaderSource Shadering::ParseShader(const std::string& filepath)
 {
@@ -57,8 +58,10 @@ unsigned int Shadering::ComplileShader(const std::string& source, unsigned int t
     return id;
 }
 
-unsigned int Shadering::CreateShader()
+ShaderAndLocs Shadering::CreateShader(unsigned int& VBO, unsigned int& VAO)
 {
+    GLManager::initBuffers(VBO, VAO);
+
     ShaderSource source = Shadering::ParseShader("Resources/shaders/Style.penis");
 
     unsigned int program = glCreateProgram();
@@ -73,5 +76,14 @@ unsigned int Shadering::CreateShader()
     glDeleteShader(vertShader);
     glDeleteShader(fragShader);
 
-    return program;
+    GLint colorLocation = glGetUniformLocation(program, "circleColor");
+    GLint aspectRatioLoc = glGetUniformLocation(program, "aspectRatio");
+
+    ShaderAndLocs locs;
+    locs.colorLoc = colorLocation;
+    locs.shader = program;
+
+    glUseProgram(program);
+
+    return locs;
 }

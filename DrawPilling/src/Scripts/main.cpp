@@ -76,20 +76,9 @@ int main(int, char**)
 {
     SessionData data = Manager::Assembly(glfw_error_callback);
 
-    GLManager::initBuffers(VBO, VAO);
+    ShaderAndLocs shaderAndLocs = Shadering::CreateShader(VBO,VAO);
 
 
-    unsigned int shader = Shadering::CreateShader();
-
-    GLint colorLocation = glGetUniformLocation(shader, "circleColor");
-    GLint aspectRatioLoc = glGetUniformLocation(shader, "aspectRatio");
-    glUseProgram(shader);
-
-    int width, height;
-    glfwGetFramebufferSize(data.window, &width, &height);
-    float aspect = (float)width / (float)height;
-
-    glUniform1f(aspectRatioLoc, aspect);
 
     glfwSetFramebufferSizeCallback(data.window, framebuffer_size_callback);
 
@@ -132,10 +121,7 @@ int main(int, char**)
             ImGui::SeparatorText("Color");
             static float color[3] = { 0.0f, 0.0f, 1.0f };
             ImGui::ColorEdit3("##c", color);
-            glUniform3f(colorLocation, color[0], color[1], color[2]);
-            glfwGetFramebufferSize(data.window, &width, &height);
-            float aspect = (float)width / (float)height;
-            glUniform1f(aspectRatioLoc, aspect);
+            glUniform3f(shaderAndLocs.colorLoc, color[0], color[1], color[2]);
 
             hover = ImGui::IsWindowHovered();
 
@@ -152,5 +138,5 @@ int main(int, char**)
 #endif
 
     // Cleanup
-    Manager::DisAssembly(data.window, shader);
+    Manager::DisAssembly(data.window, shaderAndLocs.shader);
 }
