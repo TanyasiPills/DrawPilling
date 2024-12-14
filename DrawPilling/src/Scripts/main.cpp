@@ -30,6 +30,7 @@
 #include "GLManager.h"
 #include "Shader.h"
 #include "SessionManager.h"
+#include "Renderer.h"
 
 
 //definitions
@@ -43,13 +44,8 @@ int screenheight;
 unsigned int VBO;
 unsigned int VAO;
 
-std::vector<std::vector<float>> circles;
-
-ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
-
 static float size = 0.1f;
 bool hover = false;
-
 
 //functions
 static void glfw_error_callback(int error, const char* description)
@@ -68,35 +64,16 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-void RenderScreen(GLFWwindow* window) {
-    ImGui::Render();
-    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    static double prevXpos, prevYpos;
-    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, size, 24, hover);
-
-    for (const auto& circle : circles) {
-        GLManager::updateVBO(VAO, circle);
-        GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
-    }
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    glfwSwapBuffers(window);
-}
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     //int xDif = width - screenwidth;
     //int yDif = height - screenheight;
     glViewport(0, 0, width, height);
-    RenderScreen(window);
+    Renderer::RenderScreen(window,VBO,VAO,&size,&hover);
 }
 
 // Main code
 int main(int, char**)
 {
-    
     SessionData data = Manager::Assembly(glfw_error_callback);
 
     GLManager::initBuffers(VBO, VAO);
@@ -168,7 +145,7 @@ int main(int, char**)
         }
 
         // Rendering
-        RenderScreen(data.window);
+        Renderer::RenderScreen(data.window,VBO,VAO, &size, &hover);
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

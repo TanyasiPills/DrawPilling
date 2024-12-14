@@ -161,6 +161,7 @@
     <ClCompile Include="src\Scripts\Drawing.cpp" />
     <ClCompile Include="src\Scripts\GLManager.cpp" />
     <ClCompile Include="src\Scripts\main.cpp" />
+    <ClCompile Include="src\Scripts\Renderer.cpp" />
     <ClCompile Include="src\Scripts\SessionManager.cpp" />
     <ClCompile Include="src\Scripts\Shader.cpp" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="Dependencies\Includes\ImGui\imstb_truetype.h" />
     <ClInclude Include="src\Headers\Drawing.h" />
     <ClInclude Include="src\Headers\GLManager.h" />
+    <ClInclude Include="src\Headers\Renderer.h" />
     <ClInclude Include="src\Headers\SessionManager.h" />
     <ClInclude Include="src\Headers\Shader.h" />
   </ItemGroup>

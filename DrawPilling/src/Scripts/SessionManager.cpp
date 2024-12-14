@@ -5,7 +5,6 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> 
 #include "SessionManager.h"
-#include <iostream>
 
 SessionData Manager::Assembly(GLFWerrorfun glfw_error_callback) {
     SessionData data;
@@ -35,8 +34,6 @@ SessionData Manager::Assembly(GLFWerrorfun glfw_error_callback) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     ImGui::StyleColorsDark();
-
-    std::cout << window << std::endl;
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
 #ifdef __EMSCRIPTEN__

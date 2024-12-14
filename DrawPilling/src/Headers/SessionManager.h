@@ -7,7 +7,6 @@ struct SessionData
 	GLFWwindow* window;
 };
 
-
 class Manager {
 public:
 	static SessionData Assembly(GLFWerrorfun glfw_error_callback);
