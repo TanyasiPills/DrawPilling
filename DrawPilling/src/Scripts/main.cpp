@@ -26,16 +26,29 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
-
+//Variables
 int screenwidth;
 int screenheight;
 
+unsigned int VBO;
+unsigned int VAO;
+
+std::vector<std::vector<float>> circles;
+
+ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+
+static float size = 0.1f;
+bool hover = false;
+
+
+//structs
 struct ShaderSource {
     std::string Vertex;
     std::string Fragment;
 };
 
 
+//functions
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -121,10 +134,30 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+void RenderScreen(GLFWwindow* window) {
+    ImGui::Render();
+    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+
+    static double prevXpos, prevYpos;
+    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, size, 24, hover);
+
+    for (const auto& circle : circles) {
+        GLManager::updateVBO(VAO, circle);
+        GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
+    }
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    glfwSwapBuffers(window);
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     //int xDif = width - screenwidth;
     //int yDif = height - screenheight;
     glViewport(0, 0, width, height);
+    RenderScreen(window);
 }
 
 // Main code
@@ -164,11 +197,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     bool show_demo_window = true;
-    ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 
-
-    unsigned int VBO;
-    unsigned int VAO;
     GLManager::initBuffers(VBO, VAO);
 
 
@@ -191,8 +220,6 @@ int main(int, char**)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
-
-    std::vector<std::vector<float>> circles;
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -218,9 +245,6 @@ int main(int, char**)
         //if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 
         processInput(window);
-
-        static float size = 0.1f;
-        bool hover = false;
 
         {
             ImGui::Begin("Controls", 0);
@@ -251,22 +275,8 @@ int main(int, char**)
 
 
         // Rendering
-        ImGui::Render();
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
 
-
-        static double prevXpos, prevYpos;
-        Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, size, 24, hover);
-
-        for (const auto& circle : circles) {
-            GLManager::updateVBO(VAO, circle);
-            GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
-        }
-
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        glfwSwapBuffers(window);
+        RenderScreen(window);
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;
