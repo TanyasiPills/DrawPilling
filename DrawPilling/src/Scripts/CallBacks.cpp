@@ -40,6 +40,8 @@ GLint scaleLoc;
 
 static double previousMousePosX = -1;
 static double previousMousePosY = -1;
+static double initx = -1;
+static double inity = -1;
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
@@ -109,6 +111,7 @@ Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsi
 void CallBackManager::ProcessInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (!spacePressed) {
+            glfwGetCursorPos(window, &initx, &inity);
             glfwGetCursorPos(window, &previousMousePosX, &previousMousePosY);
             spacePressed = true;
             return;
@@ -118,16 +121,17 @@ void CallBackManager::ProcessInput(GLFWwindow* window) {
         glfwGetWindowSize(window, &width, &height);
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
+
         if (xpos != previousMousePosX) {
             float xdiff = (xpos - previousMousePosX) / width;
-            std::cout << xpos << ", " << previousMousePosX << std::endl;
-            xOffset += xdiff;
+            std::cout << (xpos - initx) / width << std::endl;
+            xOffset += xdiff*2;
             glUniform1f(xOffsetLoc, xOffset);
         }
         if (ypos != previousMousePosY) {
             float ydiff = (ypos - previousMousePosY) / height;
-            std::cout << ydiff << std::endl;
-            yOffset -= ydiff;
+            std::cout << (ypos - inity) / height << std::endl;
+            yOffset -= ydiff*2;
             glUniform1f(yOffsetLoc, yOffset);
         }
 

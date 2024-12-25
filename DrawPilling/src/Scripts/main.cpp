@@ -56,7 +56,7 @@ int main()
 
     Ratios ratios = CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover, shaderAndLocs);
 
-    Drawing::initDrawData(ratios.xRatio, ratios.yRatio);
+    Drawing::initDrawData(ratios);
 
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;
 

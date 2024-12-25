@@ -14,12 +14,18 @@
 
 static float* xRatio;
 static float* yRatio;
+float* xOffset;
+float* yOffset;
+float* scale;
 
 static bool pressed = false;
 
-void Drawing::initDrawData(float*& xratio, float*& yratio) {
-    xRatio = xratio;
-    yRatio = yratio;
+void Drawing::initDrawData(Ratios& ratios){
+    xRatio = ratios.xRatio;
+    yRatio = ratios.xRatio;
+    xOffset = ratios.xOffset;
+    yOffset = ratios.yOffset;
+    scale = ratios.scale;
 }
 
 std::vector<float> Drawing::drawCircle(float& x, float& y, float& r, int& sides) {
@@ -56,6 +62,8 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     float y2 = -static_cast<float>(ypos) / height + 1;
     x2 /= *xRatio;
     y2 /= *yRatio;
+    x2 -= *xOffset/2;
+    y2 -= *yOffset/2;
     x2 = x2 * 2.0f - 1.0f;
     y2 = y2 * 2.0f - 1.0f;
 
