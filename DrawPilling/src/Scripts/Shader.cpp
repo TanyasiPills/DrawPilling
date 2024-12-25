@@ -62,7 +62,7 @@ ShaderAndLocs Shadering::CreateShader(unsigned int& VBO, unsigned int& VAO)
 {
     GLManager::initBuffers(VBO, VAO);
 
-    ShaderSource source = Shadering::ParseShader("Resources/shaders/Style.penis");
+    ShaderSource source = Shadering::ParseShader("Resources/shaders/Style.shader");
 
     unsigned int program = glCreateProgram();
     unsigned int vertShader = Shadering::ComplileShader(source.Vertex, GL_VERTEX_SHADER);

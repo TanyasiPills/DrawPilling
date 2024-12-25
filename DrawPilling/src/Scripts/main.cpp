@@ -39,17 +39,16 @@
 
 
 //Variables
-int screenwidth;
-int screenheight;
+int screenwidth, screenheight;
 
-unsigned int VBO;
-unsigned int VAO;
+unsigned int VBO, VAO;
 
 static float size = 0.1f;
 bool hover = false;
 
+
 // Main code
-int main(int, char**)
+int main()
 {
     SessionData data = Manager::Assembly();
 

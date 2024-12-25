@@ -14,6 +14,7 @@
 
 
 std::vector<std::vector<float>> circles;
+std::vector<std::vector<float>> canvas;
 
 ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 

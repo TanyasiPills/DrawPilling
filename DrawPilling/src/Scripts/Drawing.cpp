@@ -25,6 +25,10 @@ std::vector<float> Drawing::drawCircle(float x, float y, float r, int sides) {
     return vertices;
 }
 
+void Drawing::handleCanvasMovement(GLFWwindow* window) {
+
+}
+
 void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos, std::vector<std::vector<float>>& circles, GLuint VBO, GLuint VAO, float radius, int sides, bool hover) {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);

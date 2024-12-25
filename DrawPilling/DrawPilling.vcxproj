@@ -194,7 +194,7 @@
     <ClInclude Include="src\Headers\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\shaders\Style.penis" />
+    <None Include="Resources\shaders\Style.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

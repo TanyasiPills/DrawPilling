@@ -7,7 +7,10 @@ out vec2 fragTexCoord;
 
 void main()
 {
-	vec2 adjustedPosition = position.xy;
+	float clampedX = clamp(position.x, -0.8, 0.8);
+	float clampedY = clamp(position.y, -0.8, 0.8);
+
+	vec2 adjustedPosition = vec2(clampedX, clampedY);
 	gl_Position = vec4(adjustedPosition, position.zw);
 	fragTexCoord = adjustedPosition;
 }
