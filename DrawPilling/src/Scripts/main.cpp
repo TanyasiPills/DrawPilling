@@ -54,7 +54,7 @@ int main()
 
     ShaderAndLocs shaderAndLocs = Shadering::CreateShader(VBO,VAO);
 
-    CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover);
+    CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover, shaderAndLocs.xRatio, shaderAndLocs.yRatio);
 
 
     //ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground;

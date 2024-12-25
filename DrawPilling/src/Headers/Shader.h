@@ -9,6 +9,8 @@ struct ShaderAndLocs
 {
     unsigned int shader;
     GLint colorLoc;
+    GLint xRatio;
+    GLint yRatio;
 };
 
 class Shadering {

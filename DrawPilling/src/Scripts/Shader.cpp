@@ -77,11 +77,14 @@ ShaderAndLocs Shadering::CreateShader(unsigned int& VBO, unsigned int& VAO)
     glDeleteShader(fragShader);
 
     GLint colorLocation = glGetUniformLocation(program, "circleColor");
-    GLint aspectRatioLoc = glGetUniformLocation(program, "aspectRatio");
+    GLint xRation = glGetUniformLocation(program, "xRatio");
+    GLint yRation = glGetUniformLocation(program, "yRatio");
 
     ShaderAndLocs locs;
     locs.colorLoc = colorLocation;
     locs.shader = program;
+    locs.xRatio = xRation;
+    locs.yRatio = yRation;
 
     glUseProgram(program);
 
