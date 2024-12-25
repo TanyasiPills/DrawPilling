@@ -42,16 +42,51 @@ static double previousMousePosX = -1;
 static double previousMousePosY = -1;
 static double initx = -1;
 static double inity = -1;
+static float prevScale = 1.0f;
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) 
 {
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+
+    double deltaX = 0.5 - (xpos / width);
+    double deltaY = 0.5 - (ypos / height);
+    if (std::abs(deltaX) > 0.3) deltaX = (deltaX > 0) ? 0.3 : -0.3;
+    if (std::abs(deltaY) > 0.3) deltaY = (deltaY > 0) ? 0.3 : -0.3;
+
     if (yoffset > 0) {
+        prevScale = scale;
         scale *= 1.12f;
+        if (scale > 2.0f) {
+            scale = prevScale;
+            return;
+        }
         glUniform1f(scaleLoc, scale);
+
+        std::cout << scale << std::endl;
+
+        xOffset += deltaX / 2;
+        yOffset -= deltaY / 2;
+        glUniform1f(xOffsetLoc, xOffset);
+        glUniform1f(yOffsetLoc, yOffset);
     }
     else if (yoffset < 0) {
+        prevScale = scale;
         scale *= 0.89285f;
+        if (scale < 0.6f) {
+            scale = prevScale;
+            return;
+        }
         glUniform1f(scaleLoc, scale);
+
+        std::cout << scale << std::endl;
+
+        xOffset -= deltaX / 2;
+        yOffset += deltaY / 2;
+        glUniform1f(xOffsetLoc, xOffset);
+        glUniform1f(yOffsetLoc, yOffset);
     }
 }
 
