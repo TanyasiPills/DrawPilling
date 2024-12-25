@@ -127,7 +127,7 @@ void CallBackManager::ProcessInput(GLFWwindow* window) {
         if (ypos != previousMousePosY) {
             float ydiff = (ypos - previousMousePosY) / height;
             std::cout << ydiff << std::endl;
-            yOffset += ydiff;
+            yOffset -= ydiff;
             glUniform1f(yOffsetLoc, yOffset);
         }
 
