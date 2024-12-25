@@ -63,9 +63,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
             scale = prevScale;
             return;
         }
-        glUniform1f(scaleLoc, scale);
 
-        std::cout << scale << std::endl;
+        glUniform1f(scaleLoc, scale);
 
         xOffset += deltaX / 2;
         yOffset -= deltaY / 2;
@@ -79,9 +78,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
             scale = prevScale;
             return;
         }
-        glUniform1f(scaleLoc, scale);
 
-        std::cout << scale << std::endl;
+        glUniform1f(scaleLoc, scale);
 
         xOffset -= deltaX / 2;
         yOffset += deltaY / 2;
@@ -93,23 +91,18 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
 {
     if (initialWidth == -1) {
-        initialHeight = height;
         initialWidth = width;
+        initialHeight = height;
     }
-
-    int currentX, currentY;
-    glfwGetWindowPos(window, &currentX, &currentY);
 
     if (width != previousWidth) {
         xRatio = initialWidth / static_cast<float>(width);
         previousWidth = width;
-        previousX = currentX;
         glUniform1f(xAspectLoc, xRatio);
     }
     if (height != prevousHeight) {
         yRatio = initialHeight / static_cast<float>(height);
         prevousHeight = height;
-        previousY = currentY;
         glUniform1f(yAspectLoc, yRatio);
     }
 

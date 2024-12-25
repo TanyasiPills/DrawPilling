@@ -22,11 +22,11 @@ float* xOffset;
 float* yOffset;
 float* scale;
 
-static bool pressed = false;
+static int clicks = 0;
 
 void Drawing::initDrawData(Ratios& ratios){
     xRatio = ratios.xRatio;
-    yRatio = ratios.xRatio;
+    yRatio = ratios.yRatio;
     xOffset = ratios.xOffset;
     yOffset = ratios.yOffset;
     scale = ratios.scale;
@@ -65,12 +65,13 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
 
     CordData prev = GetCordData(prevXpos, prevYpos, width, height);
     CordData now = GetCordData(xpos, ypos, width, height);
-
     /*
     float x2 = static_cast<float>(xpos) / width;
     float y2 = -static_cast<float>(ypos) / height + 1;
+    std::cout << y2 << ", ";
     x2 /= *xRatio;
     y2 /= *yRatio;
+    std::cout << y2 << std::endl;
     x2 -= (*xOffset / 2) * *scale;
     y2 -= (*yOffset / 2) * *scale;
     x2 = x2 * 2.0f - 1.0f;
@@ -88,11 +89,17 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     {
         return;
     }
-
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        if (prev.x == now.x && prev.y == now.y) return;
+        if (prev.x == now.x && prev.y == now.y) {
+            if (clicks == 0) {
+                clicks++;
+                std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
+                circles.push_back(currentCircle);
+            }
+            return;
+        }
         //int num_samples = std::max(static_cast<int>(sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (prev.y - prev.y)) / radius), 4);
-        int num_samples = std::max(static_cast<int>(std::exp(std::sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (now.y - prev.y)) / radius)), 4);
+        int num_samples = std::max(static_cast<int>(std::exp(std::sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (now.y - prev.y)) / radius)), 2);
         for (int i = 0; i <= num_samples; ++i) {
             float t = static_cast<float>(i) / num_samples;
             float vx = prev.x * (1 - t) + now.x * t;
@@ -100,6 +107,9 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
             std::vector<float> currentCircle = Drawing::drawCircle(vx, vy, radius, sides);
             circles.push_back(currentCircle);
         }
+    }
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+        clicks = 0;
     }
 
     prevXpos = xpos;
