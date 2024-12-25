@@ -11,6 +11,11 @@
 
 #define PI 3.1415927f
 
+struct CordData {
+    float x;
+    float y;
+};
+
 static float* xRatio;
 static float* yRatio;
 float* xOffset;
@@ -45,18 +50,23 @@ void Drawing::handleCanvasMovement(GLFWwindow* window) {
 
 }
 
+CordData GetCordData(double& xpos, double& ypos, int& width, int& height) {
+    CordData data;
+    data.x = ((((static_cast<float>(xpos) / width) / *xRatio) - (*xOffset / 2) * *scale) * 2.0f - 1.0f) / *scale;
+    data.y = ((((-static_cast<float>(ypos) / height + 1) / *yRatio) - (*yOffset / 2) * *scale) * 2.0f - 1.0f) / *scale;
+    return data;
+}
+
 void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double& prevYpos, std::vector<std::vector<float>>& circles, GLuint VBO, GLuint VAO, float radius, int sides, bool hover) {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
 
+    CordData prev = GetCordData(prevXpos, prevYpos, width, height);
+    CordData now = GetCordData(xpos, ypos, width, height);
+
     /*
-    float x1 = static_cast<float>(prevXpos) / width * 2.0f - 1.0f;
-    float y1 = -static_cast<float>(prevYpos) / height * 2.0f + 1.0f;
-    float x2 = static_cast<float>(xpos) / width * 2.0f - 1.0f;
-    float y2 = -static_cast<float>(ypos) / height * 2.0f + 1.0f;
-    */
     float x2 = static_cast<float>(xpos) / width;
     float y2 = -static_cast<float>(ypos) / height + 1;
     x2 /= *xRatio;
@@ -67,9 +77,10 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     y2 = y2 * 2.0f - 1.0f;
     x2 /= *scale; 
     y2 /= *scale;
+    */
     
 
-    std::vector<float> currentCircle = Drawing::drawCircle(x2, y2, radius, sides);
+    std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
     GLManager::updateVBO(VBO, currentCircle);
     GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, currentCircle);
 
@@ -79,22 +90,16 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        if (pressed) return;
-        circles.push_back(currentCircle);
-        /*
-        int num_samples = std::max(static_cast<int>(sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / radius), 1);
+        if (prev.x == now.x && prev.y == now.y) return;
+        //int num_samples = std::max(static_cast<int>(sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (prev.y - prev.y)) / radius), 4);
+        int num_samples = std::max(static_cast<int>(std::exp(std::sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (now.y - prev.y)) / radius)), 4);
         for (int i = 0; i <= num_samples; ++i) {
             float t = static_cast<float>(i) / num_samples;
-            float vx = x1 * (1 - t) + x2 * t;
-            float vy = y1 * (1 - t) + y2 * t;
+            float vx = prev.x * (1 - t) + now.x * t;
+            float vy = prev.y * (1 - t) + now.y * t;
             std::vector<float> currentCircle = Drawing::drawCircle(vx, vy, radius, sides);
             circles.push_back(currentCircle);
         }
-        */
-        pressed = true;
-    }
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
-        pressed = false;
     }
 
     prevXpos = xpos;

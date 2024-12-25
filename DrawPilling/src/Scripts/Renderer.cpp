@@ -24,7 +24,7 @@ void Renderer::RenderScreen(GLFWwindow* window, unsigned int& VBO, unsigned int&
     glClear(GL_COLOR_BUFFER_BIT);
 
     static double prevXpos, prevYpos;
-    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, *size, 24, *hover);
+    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, *size, 12, *hover);
 
     for (const auto& circle : circles) {
         GLManager::updateVBO(VAO, circle);
