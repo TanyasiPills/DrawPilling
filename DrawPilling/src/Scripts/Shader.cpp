@@ -79,12 +79,18 @@ ShaderAndLocs Shadering::CreateShader(unsigned int& VBO, unsigned int& VAO)
     GLint colorLocation = glGetUniformLocation(program, "circleColor");
     GLint xRation = glGetUniformLocation(program, "xRatio");
     GLint yRation = glGetUniformLocation(program, "yRatio");
+    GLint xOffsetet = glGetUniformLocation(program, "xOffset");
+    GLint yOffsetet = glGetUniformLocation(program, "yOffset");
+    GLint scalel = glGetUniformLocation(program, "scale");
 
     ShaderAndLocs locs;
     locs.colorLoc = colorLocation;
     locs.shader = program;
     locs.xRatio = xRation;
     locs.yRatio = yRation;
+    locs.xOffset = xOffsetet;
+    locs.yOffset = yOffsetet;
+    locs.scale = scalel;
 
     glUseProgram(program);
 

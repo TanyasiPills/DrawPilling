@@ -11,6 +11,9 @@ struct ShaderAndLocs
     GLint colorLoc;
     GLint xRatio;
     GLint yRatio;
+    GLint xOffset;
+    GLint yOffset;
+    GLint scale;
 };
 
 class Shadering {

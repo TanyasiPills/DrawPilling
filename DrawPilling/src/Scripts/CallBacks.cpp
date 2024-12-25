@@ -10,6 +10,7 @@
 
 #include "CallBacks.h"
 #include "Renderer.h"
+#include "Shader.h"
 
 unsigned int* VBOH;
 unsigned int* VAOH;
@@ -24,11 +25,21 @@ static int previousWidth = 800;
 static int prevousHeight = 800;
 static int previousX = 0;
 static int previousY = 0;
-static float xRatio = 1;
-static float yRatio = 1;
+
+static float xRatio = 1.0f;
+static float yRatio = 1.0f;
+static float xOffset = 0.0f;
+static float yOffset = 0.0f;
+static float scale = 1.0f;
 
 GLint xAspectLoc;
 GLint yAspectLoc;
+GLint xOffsetLoc;
+GLint yOffsetLoc;
+GLint scaleLoc;
+
+static double previousMousePosX = -1;
+static double previousMousePosY = -1;
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
@@ -64,49 +75,68 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, GLint& xLoc, GLint& yLoc) {
+Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs) {
     VBOH = VBO;
     VAOH = VAO;
     sizeH = size;
     hoverH = hover;
-    xAspectLoc = xLoc;
-    yAspectLoc = yLoc;
-    Ratios hihi;
-    hihi.xRatio = &xRatio;
-    hihi.yRatio = &yRatio;
+
+    xAspectLoc = shaderAndLocs.xRatio;
+    yAspectLoc = shaderAndLocs.yRatio;
+    xOffsetLoc = shaderAndLocs.xOffset;
+    yOffsetLoc = shaderAndLocs.yOffset;
+    scaleLoc = shaderAndLocs.scale;
+
+    Ratios mapData;
+    mapData.xRatio = &xRatio;
+    mapData.yRatio = &yRatio;
+    mapData.xOffset = &xOffset;
+    mapData.yOffset = &yOffset;
+    mapData.scale = &scale;
 
     glUniform1f(xAspectLoc, xRatio);
     glUniform1f(yAspectLoc, yRatio);
+    glUniform1f(xOffsetLoc, xOffset);
+    glUniform1f(yOffsetLoc, yOffset);
+    glUniform1f(scaleLoc, scale);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetErrorCallback(glfw_error_callback);
 
-    return hihi;
+    return mapData;
 }
 
 void CallBackManager::ProcessInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (!spacePressed) {
-            spacePressed = true; // Mark as pressed
-            // Action for pressing Space
-            std::cout << "Space key pressed!" << std::endl;
+            glfwGetCursorPos(window, &previousMousePosX, &previousMousePosY);
+            spacePressed = true;
+            return;
         }
-    }
 
-    // Check if Space is released
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        if (xpos != previousMousePosX) {
+            float xdiff = (xpos - previousMousePosX) / width;
+            std::cout << xpos << ", " << previousMousePosX << std::endl;
+            xOffset += xdiff;
+            glUniform1f(xOffsetLoc, xOffset);
+        }
+        if (ypos != previousMousePosY) {
+            float ydiff = (ypos - previousMousePosY) / height;
+            std::cout << ydiff << std::endl;
+            yOffset += ydiff;
+            glUniform1f(yOffsetLoc, yOffset);
+        }
+
+        previousMousePosX = xpos;
+        previousMousePosY = ypos;
+    }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
         if (spacePressed) {
-            spacePressed = false; // Mark as released
-            // Action for releasing Space
-            std::cout << "Space key released!" << std::endl;
+            spacePressed = false;
         }
     }
 }

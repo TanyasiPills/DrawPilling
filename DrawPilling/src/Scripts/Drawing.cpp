@@ -70,7 +70,6 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         if (pressed) return;
-        std::cout << "nagyon" << std::endl;
         circles.push_back(currentCircle);
         /*
         int num_samples = std::max(static_cast<int>(sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / radius), 1);
