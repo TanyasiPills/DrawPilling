@@ -62,10 +62,12 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     float y2 = -static_cast<float>(ypos) / height + 1;
     x2 /= *xRatio;
     y2 /= *yRatio;
-    x2 -= *xOffset/2;
-    y2 -= *yOffset/2;
+    x2 -= *xOffset / 2;
+    y2 -= *yOffset / 2;
     x2 = x2 * 2.0f - 1.0f;
     y2 = y2 * 2.0f - 1.0f;
+    x2 /= *scale; 
+    y2 /= *scale;
 
     std::vector<float> currentCircle = Drawing::drawCircle(x2, y2, radius, sides);
     GLManager::updateVBO(VBO, currentCircle);

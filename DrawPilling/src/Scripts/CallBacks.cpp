@@ -43,8 +43,20 @@ static double previousMousePosY = -1;
 static double initx = -1;
 static double inity = -1;
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) 
+{
+    if (yoffset > 0) {
+        scale *= 1.12f;
+        glUniform1f(scaleLoc, scale);
+    }
+    else if (yoffset < 0) {
+        scale *= 0.89285f;
+        glUniform1f(scaleLoc, scale);
+    }
+}
 
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
+{
     if (initialWidth == -1) {
         initialHeight = height;
         initialWidth = width;
@@ -66,8 +78,6 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
         glUniform1f(yAspectLoc, yRatio);
     }
 
-    std::cout << "xRatio: " << xRatio << ", yRatio: " << yRatio << std::endl;
-
     glViewport(0, 0, width, height);
     Renderer::RenderScreen(window, *VBOH, *VAOH, sizeH, hoverH);
 }
@@ -77,7 +87,8 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs) {
+Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs) 
+{ 
     VBOH = VBO;
     VAOH = VAO;
     sizeH = size;
@@ -102,13 +113,15 @@ Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsi
     glUniform1f(yOffsetLoc, yOffset);
     glUniform1f(scaleLoc, scale);
 
+    glfwSetScrollCallback(window, scroll_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetErrorCallback(glfw_error_callback);
 
     return mapData;
 }
 
-void CallBackManager::ProcessInput(GLFWwindow* window) {
+void CallBackManager::ProcessInput(GLFWwindow* window) 
+{
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (!spacePressed) {
             glfwGetCursorPos(window, &initx, &inity);
