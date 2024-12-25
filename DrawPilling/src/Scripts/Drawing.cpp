@@ -11,7 +11,17 @@
 
 #define PI 3.1415927f
 
-std::vector<float> Drawing::drawCircle(float x, float y, float r, int sides) {
+static float* xRatio;
+static float* yRatio;
+
+static bool pressed = false;
+
+void Drawing::initDrawData(float*& xratio, float*& yratio) {
+    xRatio = xratio;
+    yRatio = yratio;
+}
+
+std::vector<float> Drawing::drawCircle(float& x, float& y, float& r, int& sides) {
     std::vector<float> vertices;
 	const float step = 2 * PI / sides;
 
@@ -50,6 +60,7 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        if (pressed) return;
         std::cout << "nagyon" << std::endl;
         int num_samples = std::max(static_cast<int>(sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / radius), 1);
         for (int i = 0; i <= num_samples; ++i) {
@@ -59,6 +70,10 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
             std::vector<float> currentCircle = Drawing::drawCircle(vx, vy, radius, sides);
             circles.push_back(currentCircle);
         }
+        pressed = true;
+    }
+    if (glfwGetKey(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+        pressed = false;
     }
 
 
