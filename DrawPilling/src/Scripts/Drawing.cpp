@@ -2,6 +2,7 @@
 #include "GLManager.h"
 #include <vector>
 #include <math.h>
+#include <algorithm>
 #include <iostream>
 #include "GLEW/glew.h"
 #include <GLFW/glfw3.h>
@@ -52,13 +53,11 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     float y2 = -static_cast<float>(ypos) / height * 2.0f + 1.0f;
     */
     float x2 = static_cast<float>(xpos) / width;
-    float y2 = -static_cast<float>(ypos) / height;
-
+    float y2 = -static_cast<float>(ypos) / height + 1;
     x2 /= *xRatio;
     y2 /= *yRatio;
     x2 = x2 * 2.0f - 1.0f;
-    y2 = y2 * 2.0f + 1.0f;
-    std::cout << x2  << ", " << y2 << std::endl;
+    y2 = y2 * 2.0f - 1.0f;
 
     std::vector<float> currentCircle = Drawing::drawCircle(x2, y2, radius, sides);
     GLManager::updateVBO(VBO, currentCircle);
