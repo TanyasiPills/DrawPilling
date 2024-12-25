@@ -41,23 +41,13 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glfwGetWindowPos(window, &currentX, &currentY);
 
     if (width != previousWidth) {
-        if (currentX != previousX) {
-            xRatio = static_cast<float>(width) / initialWidth;
-        }
-        else {
-            xRatio = initialWidth / static_cast<float>(width);
-        }
+        xRatio = initialWidth / static_cast<float>(width);
         previousWidth = width;
         previousX = currentX;
         glUniform1f(xAspectLoc, xRatio);
     }
     if (height != prevousHeight) {
-        if (currentY != previousY) {
-            yRatio = static_cast<float>(height) / initialHeight;
-        }
-        else {
-            yRatio = initialHeight / static_cast<float>(height);
-        }
+        yRatio = initialHeight / static_cast<float>(height);
         prevousHeight = height;
         previousY = currentY;
         glUniform1f(yAspectLoc, yRatio);
@@ -74,15 +64,24 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-void CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, GLint& xLoc, GLint& yLoc) {
+Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, GLint& xLoc, GLint& yLoc) {
     VBOH = VBO;
     VAOH = VAO;
     sizeH = size;
     hoverH = hover;
     xAspectLoc = xLoc;
     yAspectLoc = yLoc;
+    Ratios hihi;
+    hihi.xRatio = &xRatio;
+    hihi.yRatio = &yRatio;
+
+    glUniform1f(xAspectLoc, xRatio);
+    glUniform1f(yAspectLoc, yRatio);
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetErrorCallback(glfw_error_callback);
+
+    return hihi;
 }
 
 void CallBackManager::ProcessInput(GLFWwindow* window) {
