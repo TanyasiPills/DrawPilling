@@ -12,6 +12,6 @@ public:
 	void Bind();
 	void Unbind();
 
-	void UpdateData();
+	//void UpdateData(const void* data, unsigned int size);
 };
 

@@ -190,10 +190,12 @@
     <ClInclude Include="src\Headers\CallBacks.h" />
     <ClInclude Include="src\Headers\Drawing.h" />
     <ClInclude Include="src\Headers\GLManager.h" />
+    <ClInclude Include="src\Headers\VertexArray.h" />
     <ClInclude Include="src\Headers\VertexBuffer.h" />
     <ClInclude Include="src\Headers\Renderer.h" />
     <ClInclude Include="src\Headers\SessionManager.h" />
     <ClInclude Include="src\Headers\Shader.h" />
+    <ClInclude Include="src\Headers\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Style.shader" />

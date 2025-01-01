@@ -132,6 +132,12 @@
     <ClInclude Include="src\Headers\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Headers\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Headers\VertexBufferLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Style.shader" />
