@@ -32,7 +32,7 @@ void main()
 	clampedY *= scale;
 
 	vec2 adjustedPosition = vec2(clampedX, clampedY);
-	gl_Position = vec4(adjustedPosition, position.zw);
+	gl_Position = vec4(adjustedPosition, 0.0, 1.0);
 	fragTexCoord = adjustedPosition;
 }
 

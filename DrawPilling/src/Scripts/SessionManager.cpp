@@ -16,7 +16,7 @@ SessionData Manager::Assembly() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(690, 690, "I hate Jazz", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(720, 720, "I hate Jazz", nullptr, nullptr);
     data.window = window;
     data.screenWidth = 690;
     data.screenHeight = 690;
