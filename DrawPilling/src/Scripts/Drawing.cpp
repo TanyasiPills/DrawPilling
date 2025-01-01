@@ -36,9 +36,8 @@ void Drawing::initDrawData(Ratios& ratios){
     yOffset = ratios.yOffset;
     scale = ratios.scale;
 
-    canvasVertecies = { 
-        -0.8f, -0.8f, 0.8f, 0.8f,-0.8f, 0.8f,
-        -0.8f, -0.8f, 0.8f, -0.8f, 0.8f, 0.8f
+    canvasVertecies = {
+        -0.8f, -0.8f, 0.8f, -0.8f, 0.8f, 0.8f, -0.8f, 0.8f
     };
 
     color = Renderer::GetColorPointer();
@@ -117,19 +116,24 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
                 clicks++;
                 std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
                 currentCircle.insert(currentCircle.begin(), newArray, newArray + 3);
-                circles.push_back(currentCircle);
+                circles.push_back(std::move(currentCircle));
             }
             return;
         }
-        //int num_samples = std::max(static_cast<int>(sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (prev.y - prev.y)) / radius), 4);
-        int num_samples = std::max(static_cast<int>(std::exp(std::sqrt((now.x - prev.x) * (now.x - prev.x) + (now.y - prev.y) * (now.y - prev.y)) / radius)), 2);
+
+        float dx = now.x - prev.x;
+        float dy = now.y - prev.y;
+        float distance = std::sqrt(dx * dx + dy * dy);
+
+        int num_samples = std::max(static_cast<int>(std::exp(distance / radius)), 1);
+
         for (int i = 0; i <= num_samples; ++i) {
             float t = static_cast<float>(i) / num_samples;
             float vx = prev.x * (1 - t) + now.x * t;
             float vy = prev.y * (1 - t) + now.y * t;
             std::vector<float> currentCircle = Drawing::drawCircle(vx, vy, radius, sides);
             currentCircle.insert(currentCircle.begin(), newArray, newArray + 3);
-            circles.push_back(currentCircle);
+            circles.push_back(std::move(currentCircle));
         }
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {

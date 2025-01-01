@@ -1,11 +1,14 @@
 #include "GLManager.h"
 #include "GLEW/glew.h"
+#include "VertexBuffer.h"
 #include <GLFW/glfw3.h>
 
 unsigned int* shaderProgram;
+GLint colorLoc;
 
 void GLManager::GetShaderProgram(unsigned int& shader) {
 	shaderProgram = &shader;
+	colorLoc = glGetUniformLocation(*shaderProgram, "uColor");
 }
 
 void GLManager::initBuffers(unsigned int& VBO, unsigned int& VAO) {
@@ -25,7 +28,7 @@ void GLManager::updateVBO(unsigned int& VBO, const std::vector<float>& vertices)
 }
 
 void GLManager::drawStuff(unsigned int& VAO,GLenum mode, const std::vector<float>& vertices, float color[3]) {
-	glUniform3f(glGetUniformLocation(*shaderProgram, "uColor"), color[0], color[1], color[2]);
+	glUniform3f(colorLoc, color[0], color[1], color[2]);
 	glBindVertexArray(VAO);
 	glDrawArrays(mode, 0, static_cast<GLsizei>(vertices.size() / 2));
 	glBindVertexArray(0);
