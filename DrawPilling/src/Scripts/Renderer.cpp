@@ -13,6 +13,7 @@
 
 
 std::vector<std::vector<float>> circles;
+std::vector<float> prevCircles;
 unsigned int canvasVBO;
 
 static float color[3] = { 0.0f, 0.0f, 1.0f };
@@ -26,15 +27,15 @@ void Renderer::RenderScreen(GLFWwindow* window, unsigned int& VBO, unsigned int&
 
     Drawing::handleCanvasMovement(window,canvasVBO,canvasVAO);
 
-    static double prevXpos, prevYpos;
-    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, *size, 24, *hover);
-
     for (const auto& circle : circles) {
         float color[3] = { circle[0], circle[1], circle[2] };
         std::vector<float> verticesToDraw(circle.begin() + 3, circle.end());
         GLManager::updateVBO(VBO, verticesToDraw);
         GLManager::drawStuff(VBO, GL_TRIANGLE_FAN, verticesToDraw, color);
     }
+
+    static double prevXpos, prevYpos;
+    Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, *size, 24, *hover);
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

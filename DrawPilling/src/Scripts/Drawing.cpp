@@ -79,6 +79,8 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
 
     CordData prev = GetCordData(prevXpos, prevYpos, width, height);
     CordData now = GetCordData(xpos, ypos, width, height);
+
+
     /*
     float x2 = static_cast<float>(xpos) / width;
     float y2 = -static_cast<float>(ypos) / height + 1;
@@ -115,13 +117,6 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
                 clicks++;
                 std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
                 currentCircle.insert(currentCircle.begin(), newArray, newArray + 3);
-
-                std::cout << "Circle with Color: ";
-                for (auto v : currentCircle) {
-                    std::cout << v << " ";
-                }
-                std::cout << std::endl;
-
                 circles.push_back(currentCircle);
             }
             return;

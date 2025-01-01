@@ -85,7 +85,7 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         bool ja = false;
-        ImGui::ShowDemoWindow(&ja);
+        //ImGui::ShowDemoWindow(&ja);
 
         CallBackManager::ProcessInput(data.window);
 
