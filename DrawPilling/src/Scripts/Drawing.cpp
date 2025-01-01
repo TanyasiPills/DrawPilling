@@ -37,7 +37,7 @@ void Drawing::initDrawData(Ratios& ratios){
     scale = ratios.scale;
 
     canvasVertecies = { 
-        -0.8f, -0.8f, 0.8f, 0.8f, -0.8f, 0.8f,
+        -0.8f, -0.8f, 0.8f, 0.8f,-0.8f, 0.8f,
         -0.8f, -0.8f, 0.8f, -0.8f, 0.8f, 0.8f
     };
 
