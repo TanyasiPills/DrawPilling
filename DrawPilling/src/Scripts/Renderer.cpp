@@ -12,23 +12,28 @@
 #include "Renderer.h"
 
 
-
 std::vector<std::vector<float>> circles;
-std::vector<std::vector<float>> canvas;
+unsigned int canvasVBO;
 
-ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+static float color[3] = { 0.0f, 0.0f, 1.0f };
 
-void Renderer::RenderScreen(GLFWwindow* window, unsigned int& VBO, unsigned int& VAO, float* size, bool* hover) {
+ImVec4 clear_color = ImVec4(0.3f, 0.3f, 0.3f, 1.00f);
+
+void Renderer::RenderScreen(GLFWwindow* window, unsigned int& VBO, unsigned int& VAO, float* size, bool* hover, unsigned int& canvasVBO, unsigned int& canvasVAO) {
     ImGui::Render();
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    Drawing::handleCanvasMovement(window,canvasVBO,canvasVAO);
 
     static double prevXpos, prevYpos;
     Drawing::handleCursorMovement(window, prevXpos, prevYpos, circles, VBO, VAO, *size, 24, *hover);
 
     for (const auto& circle : circles) {
-        GLManager::updateVBO(VAO, circle);
-        GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, circle);
+        float color[3] = { circle[0], circle[1], circle[2] };
+        std::vector<float> verticesToDraw(circle.begin() + 3, circle.end());
+        GLManager::updateVBO(VBO, verticesToDraw);
+        GLManager::drawStuff(VBO, GL_TRIANGLE_FAN, verticesToDraw, color);
     }
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -46,13 +51,15 @@ void Renderer::RenderUI(GLint& colorLoc,float* size, bool* hover) {
 
     ImGui::DragFloat("##x", size, 0.01f, 0.0f, 0.0f, "%.04f");
     ImGui::SeparatorText("Color");
-    static float color[3] = { 0.0f, 0.0f, 1.0f };
     ImGui::ColorEdit3("##c", color);
-    glUniform3f(colorLoc, color[0], color[1], color[2]);
 
     *hover = ImGui::IsWindowHovered();
 
     ImGui::PopItemWidth();
 
     ImGui::End();
+}
+
+float* Renderer::GetColorPointer() {
+    return color;
 }

@@ -14,6 +14,8 @@
 
 unsigned int* VBOH;
 unsigned int* VAOH;
+unsigned int* canVAO;
+unsigned int* canVBO;
 float* sizeH;
 bool* hoverH;
 
@@ -107,7 +109,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     }
 
     glViewport(0, 0, width, height);
-    Renderer::RenderScreen(window, *VBOH, *VAOH, sizeH, hoverH);
+    Renderer::RenderScreen(window, *VBOH, *VAOH, sizeH, hoverH, *canVBO, *canVAO);
 }
 
 static void glfw_error_callback(int error, const char* description)
@@ -115,10 +117,12 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs) 
+Ratios CallBackManager::SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs, unsigned int* canvasVBO, unsigned int* canvasVAO)
 { 
     VBOH = VBO;
     VAOH = VAO;
+    canVAO = canvasVAO;
+    canVBO = canvasVBO;
     sizeH = size;
     hoverH = hover;
 
@@ -165,13 +169,13 @@ void CallBackManager::ProcessInput(GLFWwindow* window)
 
         if (xpos != previousMousePosX) {
             float xdiff = (xpos - previousMousePosX) / width;
-            std::cout << (xpos - initx) / width << std::endl;
+            //std::cout << (xpos - initx) / width << std::endl;
             xOffset += xdiff*2;
             glUniform1f(xOffsetLoc, xOffset);
         }
         if (ypos != previousMousePosY) {
             float ydiff = (ypos - previousMousePosY) / height;
-            std::cout << (ypos - inity) / height << std::endl;
+            //std::cout << (ypos - inity) / height << std::endl;
             yOffset -= ydiff*2;
             glUniform1f(yOffsetLoc, yOffset);
         }

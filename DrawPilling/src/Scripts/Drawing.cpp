@@ -1,5 +1,6 @@
 #include "Drawing.h"
 #include "GLManager.h"
+#include "Renderer.h"
 #include <vector>
 #include <math.h>
 #include <iostream>
@@ -24,12 +25,23 @@ float* scale;
 
 static int clicks = 0;
 
+std::vector<float> canvasVertecies;
+
+float* color;
+
 void Drawing::initDrawData(Ratios& ratios){
     xRatio = ratios.xRatio;
     yRatio = ratios.yRatio;
     xOffset = ratios.xOffset;
     yOffset = ratios.yOffset;
     scale = ratios.scale;
+
+    canvasVertecies = { 
+        -0.8f, -0.8f, 0.8f, 0.8f, -0.8f, 0.8f,
+        -0.8f, -0.8f, 0.8f, -0.8f, 0.8f, 0.8f
+    };
+
+    color = Renderer::GetColorPointer();
 }
 
 std::vector<float> Drawing::drawCircle(float& x, float& y, float& r, int& sides) {
@@ -46,8 +58,10 @@ std::vector<float> Drawing::drawCircle(float& x, float& y, float& r, int& sides)
     return vertices;
 }
 
-void Drawing::handleCanvasMovement(GLFWwindow* window) {
-
+void Drawing::handleCanvasMovement(GLFWwindow* window, unsigned int& VBO, unsigned int& VAO) {
+    float color[3] = {1.0f, 1.0f, 1.0f};
+    GLManager::updateVBO(VBO, canvasVertecies);
+    GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, canvasVertecies, color);
 }
 
 CordData GetCordData(double& xpos, double& ypos, int& width, int& height) {
@@ -82,8 +96,14 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
     
 
     std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
+
+    float newArray[3];
+    for (int i = 0; i < 3; ++i) {
+        newArray[i] = color[i];
+    }
+
     GLManager::updateVBO(VBO, currentCircle);
-    GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, currentCircle);
+    GLManager::drawStuff(VAO, GL_TRIANGLE_FAN, currentCircle, newArray);
 
     if (hover || ImGui::IsAnyItemHovered())
     {
@@ -94,6 +114,14 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
             if (clicks == 0) {
                 clicks++;
                 std::vector<float> currentCircle = Drawing::drawCircle(now.x, now.y, radius, sides);
+                currentCircle.insert(currentCircle.begin(), newArray, newArray + 3);
+
+                std::cout << "Circle with Color: ";
+                for (auto v : currentCircle) {
+                    std::cout << v << " ";
+                }
+                std::cout << std::endl;
+
                 circles.push_back(currentCircle);
             }
             return;
@@ -105,6 +133,7 @@ void Drawing::handleCursorMovement(GLFWwindow* window, double& prevXpos, double&
             float vx = prev.x * (1 - t) + now.x * t;
             float vy = prev.y * (1 - t) + now.y * t;
             std::vector<float> currentCircle = Drawing::drawCircle(vx, vy, radius, sides);
+            currentCircle.insert(currentCircle.begin(), newArray, newArray + 3);
             circles.push_back(currentCircle);
         }
     }

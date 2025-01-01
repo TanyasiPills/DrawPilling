@@ -42,6 +42,7 @@
 int screenwidth, screenheight;
 
 unsigned int VBO, VAO;
+unsigned int CanvasVBO, CanvasVAO;
 
 static float size = 0.1f;
 bool hover = false;
@@ -52,9 +53,13 @@ int main()
 {
     SessionData data = Manager::Assembly();
 
+    GLManager::initBuffers(CanvasVBO, CanvasVAO);
+
     ShaderAndLocs shaderAndLocs = Shadering::CreateShader(VBO,VAO);
 
-    Ratios ratios = CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover, shaderAndLocs);
+    GLManager::GetShaderProgram(shaderAndLocs.shader);
+
+    Ratios ratios = CallBackManager::SetCallBacks(data.window, &VBO, &VAO, &size, &hover, shaderAndLocs, &CanvasVBO, &CanvasVAO);
 
     Drawing::initDrawData(ratios);
 
@@ -79,13 +84,14 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        //ImGui::ShowDemoWindow(&show_demo_window);
+        bool ja = false;
+        ImGui::ShowDemoWindow(&ja);
 
         CallBackManager::ProcessInput(data.window);
 
         Renderer::RenderUI(shaderAndLocs.colorLoc, &size, &hover);
 
-        Renderer::RenderScreen(data.window,VBO,VAO, &size, &hover);
+        Renderer::RenderScreen(data.window,VBO,VAO, &size, &hover, CanvasVBO, CanvasVAO);
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

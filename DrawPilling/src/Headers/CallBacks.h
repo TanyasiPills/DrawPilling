@@ -11,6 +11,6 @@ struct Ratios {
 
 class CallBackManager {
 public:
-	 static Ratios SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs);
+	 static Ratios SetCallBacks(GLFWwindow* window, unsigned int* VBO, unsigned int* VAO, float* size, bool* hover, ShaderAndLocs& shaderAndLocs, unsigned int* canvasVBO, unsigned int* canvasVAO);
 	 static void ProcessInput(GLFWwindow* window);
 };
