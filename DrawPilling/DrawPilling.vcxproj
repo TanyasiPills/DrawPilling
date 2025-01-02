@@ -161,7 +161,10 @@
     <ClCompile Include="src\Scripts\CallBacks.cpp" />
     <ClCompile Include="src\Scripts\Drawing.cpp" />
     <ClCompile Include="src\Scripts\GLManager.cpp" />
+    <ClCompile Include="src\Scripts\IndexBuffer.cpp" />
     <ClCompile Include="src\Scripts\main.cpp" />
+    <ClCompile Include="src\Scripts\NewRenderer.cpp" />
+    <ClCompile Include="src\Scripts\NewShader.cpp" />
     <ClCompile Include="src\Scripts\Renderer.cpp" />
     <ClCompile Include="src\Scripts\SessionManager.cpp" />
     <ClCompile Include="src\Scripts\Shader.cpp" />
@@ -191,6 +194,9 @@
     <ClInclude Include="src\Headers\CallBacks.h" />
     <ClInclude Include="src\Headers\Drawing.h" />
     <ClInclude Include="src\Headers\GLManager.h" />
+    <ClInclude Include="src\Headers\IndexBuffer.h" />
+    <ClInclude Include="src\Headers\NewRenderer.h" />
+    <ClInclude Include="src\Headers\NewShader.h" />
     <ClInclude Include="src\Headers\VertexArray.h" />
     <ClInclude Include="src\Headers\VertexBuffer.h" />
     <ClInclude Include="src\Headers\Renderer.h" />
