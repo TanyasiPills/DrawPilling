@@ -165,6 +165,7 @@
     <ClCompile Include="src\Scripts\Renderer.cpp" />
     <ClCompile Include="src\Scripts\SessionManager.cpp" />
     <ClCompile Include="src\Scripts\Shader.cpp" />
+    <ClCompile Include="src\Scripts\VertexArray.cpp" />
     <ClCompile Include="src\Scripts\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
